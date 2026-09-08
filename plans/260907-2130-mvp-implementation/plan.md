@@ -27,7 +27,7 @@ Race: 22/01/2027. Baseline: 20–35 km/week. Single user, no auth. Rules-only, *
 ## Phases
 | # | Phase | Status | One-liner |
 | --- | --- | --- | --- |
-| 01 | [Verify Health Connect data path](./phase-01-verify-health-connect-data-path.md) | pending | On-device probe app: do Garmin runs appear in Health Connect? Gate for all ingestion work. |
+| 01 | [Verify Health Connect data path](./phase-01-verify-health-connect-data-path.md) | done | GO — Garmin writes rich per-sample HR/speed to Health Connect on Pixel. See plans/reports/phase-01-health-connect-verification-result.md |
 | 02 | [Project scaffolding](./phase-02-project-scaffolding.md) | pending | Monorepo, NestJS skeleton, Postgres schema + migrations, Compose app shell, CI. |
 | 03 | [Data ingestion](./phase-03-data-ingestion.md) | pending | Read activities (Health Connect or FIT/TCX), normalize, idempotent upload to backend. |
 | 04 | [Rules engine core](./phase-04-rules-engine-core.md) | pending | Baseline analysis, roadmap phases, weekly plan generation, load progression + safety guardrails. |
