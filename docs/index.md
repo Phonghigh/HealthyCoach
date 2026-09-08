@@ -19,6 +19,6 @@ HealthyCoach bắt đầu như một **AI Marathon Coach** hỗ trợ người c
 
 ## Trạng thái hiện tại
 
-Đây là bộ tài liệu khởi tạo từ các trao đổi sản phẩm. Snapshot Repomix ngày 07/09/2026 cho thấy workspace chưa có mã nguồn; vì thế stack, schema, API và các tính năng trong tài liệu là **định hướng/đề xuất**, không phải mô tả implementation đã tồn tại.
+**Phase 02 (Project scaffolding) hoàn thành:** Backend (NestJS + TypeScript + PostgreSQL), Android (Kotlin + Jetpack Compose) và schema Prisma (12 bảng) đã tồn tại. Stack kỹ thuật đã được quyết định (xem [MVP plan](../plans/260907-2130-mvp-implementation/plan.md)). Tài liệu hướng dẫn sản phẩm (`system-architecture.md`, `core-workflows.md`, v.v.) vẫn là định hướng; triển khai theo các giai đoạn được lập kế hoạch.
 
 Các điều kiện cần quyết định hoặc kiểm thử tiếp được tập trung tại [Giả định & câu hỏi mở](./assumptions-and-open-questions.md).

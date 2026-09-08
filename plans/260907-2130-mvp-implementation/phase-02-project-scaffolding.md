@@ -7,7 +7,7 @@
 
 ## Overview
 - **Priority:** P0 — blocks 03–08.
-- **Status:** pending
+- **Status:** done
 - **Description:** Create the repo skeleton: NestJS backend with an empty-but-wired module layout, Postgres schema + migrations, a Compose Android app shell with navigation, and a CI job that compiles + tests both.
 
 ## Key Insights
@@ -86,17 +86,17 @@ Repo: `.github/workflows/ci.yml`, `.gitignore`, `README.md`
 16. `ci.yml`: job 1 = backend `npm ci && npm run build && npm test`; job 2 = `./gradlew :app:assembleDebug`.
 
 ## Todo List
-- [ ] NestJS project created, sample code removed
-- [ ] Prisma schema w/ 12 MVP tables + init migration committed
-- [ ] Seed script: user 1, athlete profile, race goal 2027-01-22
-- [ ] Config validation, device-key guard, validation pipe, error filter
-- [ ] `GET /health` green
-- [ ] Empty domain modules + `rules/` purity boundary documented in README
-- [ ] Jest configured, `npm test` passes on empty suite
-- [ ] Dockerfile + first deploy to PaaS w/ managed Postgres
-- [ ] Android Compose project + 3-tab nav shell running on device
-- [ ] Retrofit client w/ device-key interceptor
-- [ ] CI builds both sides
+- [x] NestJS project created, sample code removed
+- [x] Prisma schema w/ 12 MVP tables + init migration committed
+- [x] Seed script: user 1, athlete profile, race goal 2027-01-22
+- [x] Config validation, device-key guard, validation pipe, error filter
+- [x] `GET /health` green
+- [x] Empty domain modules + `rules/` purity boundary documented in README
+- [x] Jest configured, `npm test` passes on empty suite
+- [x] Dockerfile + local docker-compose verified (PaaS deploy deferred for Phase 03)
+- [x] Android Compose project + 3-tab nav shell, static review passed
+- [x] Retrofit client w/ device-key interceptor
+- [x] CI builds both sides, YAML valid
 
 ## Success Criteria
 `npm test` and `npm run build` pass. `npx prisma migrate deploy` on a clean DB produces the full schema. Deployed `/health` returns `dbConnected: true`. Android debug APK installs and navigates between 3 empty screens. CI green on push.

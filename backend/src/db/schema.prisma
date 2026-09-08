@@ -1,0 +1,252 @@
+// HealthyCoach MVP schema.
+// Canonical units: distances in metres, durations in seconds, all timestamps UTC.
+// Never enable db push / auto-sync — health data is not re-derivable. Always use migrations.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ActivitySource {
+  health_connect
+  fit_upload
+  manual
+}
+
+enum GoalType {
+  completion
+  time_goal
+}
+
+enum PlanStatus {
+  draft
+  active
+  completed
+  abandoned
+}
+
+enum CheckinType {
+  post_run
+  pain
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+
+  athleteProfile AthleteProfile?
+  raceGoals      RaceGoal[]
+  trainingPlans  TrainingPlan[]
+
+  @@map("users")
+}
+
+model AthleteProfile {
+  id     Int  @id @default(autoincrement())
+  userId Int  @unique @map("user_id")
+  user   User @relation(fields: [userId], references: [id])
+
+  // baseline weekly mileage range, stored in metres/week
+  baselineWeeklyMetersMin Int @map("baseline_weekly_meters_min")
+  baselineWeeklyMetersMax Int @map("baseline_weekly_meters_max")
+
+  runDaysPerWeek Int    @map("run_days_per_week")
+  longRunDay     String @map("long_run_day") // e.g. "sunday"
+
+  // nutrition_profiles folded into athlete_profiles for MVP
+  sweatRateMlPerHour Int? @map("sweat_rate_ml_per_hour")
+  dietaryNotes       String? @map("dietary_notes")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("athlete_profiles")
+}
+
+model RaceGoal {
+  id     Int  @id @default(autoincrement())
+  userId Int  @map("user_id")
+  user   User @relation(fields: [userId], references: [id])
+
+  raceName String? @map("race_name")
+  raceDate DateTime @map("race_date")
+  distanceMeters Int @map("distance_meters")
+  goalType GoalType @map("goal_type")
+  goalTimeSeconds Int? @map("goal_time_seconds")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  trainingPlans TrainingPlan[]
+
+  @@map("race_goals")
+}
+
+model TrainingPlan {
+  id         Int        @id @default(autoincrement())
+  userId     Int        @map("user_id")
+  user       User       @relation(fields: [userId], references: [id])
+  raceGoalId Int        @map("race_goal_id")
+  raceGoal   RaceGoal   @relation(fields: [raceGoalId], references: [id])
+  status     PlanStatus @default(draft)
+
+  startDate DateTime @map("start_date")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  weeks             TrainingWeek[]
+  planAdjustments   PlanAdjustment[]
+
+  @@map("training_plans")
+}
+
+model TrainingWeek {
+  id             Int          @id @default(autoincrement())
+  trainingPlanId Int          @map("training_plan_id")
+  trainingPlan   TrainingPlan @relation(fields: [trainingPlanId], references: [id])
+
+  weekIndex      Int      @map("week_index")
+  weekStartDate  DateTime @map("week_start_date")
+  targetMeters   Int      @map("target_meters")
+  phase          String // base | build | peak | taper | race
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  plannedWorkouts PlannedWorkout[]
+
+  @@unique([trainingPlanId, weekIndex])
+  @@map("training_weeks")
+}
+
+model PlannedWorkout {
+  id             Int          @id @default(autoincrement())
+  trainingWeekId Int          @map("training_week_id")
+  trainingWeek   TrainingWeek @relation(fields: [trainingWeekId], references: [id])
+
+  scheduledDate   DateTime @map("scheduled_date")
+  workoutType     String   @map("workout_type") // easy | long | tempo | interval | rest | race
+  targetMeters    Int?     @map("target_meters")
+  targetSeconds   Int?     @map("target_seconds")
+  targetPaceSecondsPerKm Int? @map("target_pace_seconds_per_km")
+  notes           String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  completedActivities CompletedActivity[]
+  fuelingPlans        FuelingPlan[]
+
+  @@map("planned_workouts")
+}
+
+model CompletedActivity {
+  id     Int  @id @default(autoincrement())
+  userId Int  @map("user_id")
+
+  plannedWorkoutId Int?            @map("planned_workout_id")
+  plannedWorkout   PlannedWorkout? @relation(fields: [plannedWorkoutId], references: [id])
+
+  source     ActivitySource
+  externalId String         @map("external_id")
+
+  startedAt      DateTime @map("started_at")
+  durationSeconds Int     @map("duration_seconds")
+  distanceMeters  Int     @map("distance_meters")
+  avgHeartRate    Int?    @map("avg_heart_rate")
+  avgPaceSecondsPerKm Int? @map("avg_pace_seconds_per_km")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  subjectiveCheckins SubjectiveCheckin[]
+  injuryFlags        InjuryFlag[]
+  fuelingLogs        FuelingLog[]
+
+  @@unique([source, externalId])
+  @@map("completed_activities")
+}
+
+model SubjectiveCheckin {
+  id                   Int                @id @default(autoincrement())
+  completedActivityId  Int?               @map("completed_activity_id")
+  completedActivity    CompletedActivity? @relation(fields: [completedActivityId], references: [id])
+  userId               Int                @map("user_id")
+
+  checkinType CheckinType @map("checkin_type")
+  rpe         Int? // rate of perceived exertion 1-10
+  sorenessLevel Int? @map("soreness_level")
+  moodNotes   String? @map("mood_notes")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("subjective_checkins")
+}
+
+model FuelingPlan {
+  id               Int             @id @default(autoincrement())
+  plannedWorkoutId Int?            @map("planned_workout_id")
+  plannedWorkout   PlannedWorkout? @relation(fields: [plannedWorkoutId], references: [id])
+  userId           Int             @map("user_id")
+
+  carbGramsPerHour Int  @map("carb_grams_per_hour")
+  fluidMlPerHour   Int  @map("fluid_ml_per_hour")
+  sodiumMgPerHour  Int? @map("sodium_mg_per_hour")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  fuelingLogs FuelingLog[]
+
+  @@map("fueling_plans")
+}
+
+model FuelingLog {
+  id                  Int                @id @default(autoincrement())
+  fuelingPlanId       Int?               @map("fueling_plan_id")
+  fuelingPlan         FuelingPlan?       @relation(fields: [fuelingPlanId], references: [id])
+  completedActivityId Int?               @map("completed_activity_id")
+  completedActivity   CompletedActivity? @relation(fields: [completedActivityId], references: [id])
+  userId              Int                @map("user_id")
+
+  carbGramsConsumed Int? @map("carb_grams_consumed")
+  fluidMlConsumed   Int? @map("fluid_ml_consumed")
+  notes             String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("fueling_logs")
+}
+
+model InjuryFlag {
+  id                  Int                @id @default(autoincrement())
+  completedActivityId Int?               @map("completed_activity_id")
+  completedActivity   CompletedActivity? @relation(fields: [completedActivityId], references: [id])
+  userId              Int                @map("user_id")
+
+  bodyPart   String @map("body_part")
+  painLevel  Int    @map("pain_level") // 1-10
+  resolved   Boolean @default(false)
+  notes      String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("injury_flags")
+}
+
+model PlanAdjustment {
+  id             Int          @id @default(autoincrement())
+  trainingPlanId Int          @map("training_plan_id")
+  trainingPlan   TrainingPlan @relation(fields: [trainingPlanId], references: [id])
+
+  ruleVersion   String   @map("rule_version")
+  inputSnapshot Json     @map("input_snapshot")
+  reason        String
+  status        String   @default("proposed") // proposed | applied | rejected
+  actor         String // "system" | "user"
+
+  createdAt DateTime @default(now()) @map("created_at")
+  appliedAt DateTime? @map("applied_at")
+
+  @@map("plan_adjustments")
+}

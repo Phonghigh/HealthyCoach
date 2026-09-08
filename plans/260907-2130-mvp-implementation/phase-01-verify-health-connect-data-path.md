@@ -8,7 +8,7 @@
 
 ## Overview
 - **Priority:** P0 — blocks Phase 03, informs Phase 02 module layout.
-- **Status:** pending
+- **Status:** done
 - **Description:** Build a throwaway Android probe app that reads `ExerciseSessionRecord` from Health Connect and prints what it finds. Answer one question: does the user's Garmin Connect app actually write run activities (with distance/duration/HR/route) into Health Connect on their phone?
 
 ## Key Insights
@@ -52,16 +52,16 @@ Single-module Android app. `HealthConnectClient.getOrCreate(context)` → permis
 13. Write `plans/reports/phase-01-health-connect-verification-result.md` recording: HC availability, which permissions Garmin holds, whether sessions appear, `packageName` of the origin, and **granularity** — is HR a series of samples or a single aggregate? Is there per-lap data? Is there route/GPS?
 
 ## Todo List
-- [ ] Android Studio + SDK installed, device in developer mode
-- [ ] Probe project created, HC client dependency added
-- [ ] Manifest permissions + rationale intent filter
-- [ ] SDK availability check + Play Store fallback
-- [ ] Permission request flow working
-- [ ] ExerciseSessionRecord read + per-session distance/HR/speed
-- [ ] Compose list + JSON log
-- [ ] Garmin Connect granted HC write permission (verified in Settings)
-- [ ] Run on real device after a Garmin-recorded activity
-- [ ] Verification report written with GO / NO-GO decision
+- [x] Android Studio + SDK installed, device in developer mode
+- [x] Probe project created, HC client dependency added
+- [x] Manifest permissions + rationale intent filter
+- [x] SDK availability check + Play Store fallback
+- [x] Permission request flow working
+- [x] ExerciseSessionRecord read + per-session distance/HR/speed
+- [x] Compose list + JSON log
+- [x] Garmin Connect granted HC write permission (verified in Settings)
+- [x] Run on real device after a Garmin-recorded activity
+- [x] Verification report written with GO / NO-GO decision
 
 ## Success Criteria
 **GO (branch A):** ≥1 Garmin-originated `ExerciseSessionRecord` visible with correct distance + duration. Record whether HR samples exist — this determines how rich Phase 04's baseline analysis can be.
