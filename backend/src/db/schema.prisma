@@ -153,9 +153,12 @@ model CompletedActivity {
   externalId String         @map("external_id")
 
   startedAt      DateTime @map("started_at")
+  tzOffsetMinutes Int     @map("tz_offset_minutes")
   durationSeconds Int     @map("duration_seconds")
   distanceMeters  Int     @map("distance_meters")
   avgHeartRate    Int?    @map("avg_heart_rate")
+  maxHeartRate    Int?    @map("max_heart_rate")
+  elevationGainMeters Int? @map("elevation_gain_meters")
   avgPaceSecondsPerKm Int? @map("avg_pace_seconds_per_km")
 
   createdAt DateTime @default(now()) @map("created_at")

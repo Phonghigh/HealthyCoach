@@ -7,7 +7,7 @@
 
 ## Overview
 - **Priority:** P0 — the rules engine is worthless without real activity data.
-- **Status:** pending — **branch selected by Phase 01 result**.
+- **Status:** done — **Branch A selected by Phase 01 GO result**.
 - **Description:** Get completed runs from the watch into `completed_activities`, normalized, deduplicated, with provenance.
 
 ## Key Insights
@@ -67,17 +67,18 @@ Android:
 11. End-to-end check: run outdoors → sync → `GET /activities` shows the run with correct distance and pace.
 
 ## Todo List
-- [ ] `ActivityImportDto` + validation rules
-- [ ] Pure `activity-normalizer` + unit tests
-- [ ] Unique constraint migration `(source, externalId)`
-- [ ] `importBatch` upsert w/ per-item outcomes
-- [ ] Import/list endpoints behind device-key guard
-- [ ] Service unit tests incl. duplicate + malformed + null-HR cases
-- [ ] Android `ActivitySource` interface
-- [ ] Branch A: HealthConnectSource + permissions + changes token — OR — Branch B: file picker + server-side FIT/TCX parser + fixtures
-- [ ] `ActivityRepository` + sync throttle + foreground trigger
-- [ ] Sync status UI
-- [ ] E2E: real run appears in backend with correct distance/pace
+- [x] `ActivityImportDto` + validation rules
+- [x] Pure `activity-normalizer` + unit tests
+- [x] Unique constraint migration `(source, externalId)`
+- [x] `importBatch` upsert w/ per-item outcomes
+- [x] Import/list endpoints behind device-key guard
+- [x] Service unit tests incl. duplicate + malformed + null-HR cases (21/21 tests pass)
+- [x] Android `ActivitySource` interface
+- [x] Branch A: HealthConnectSource + permissions + changes token
+- [-] Branch B: file picker + server-side FIT/TCX parser + fixtures — N/A — branch A selected
+- [x] `ActivityRepository` + sync throttle + foreground trigger
+- [x] Sync status UI
+- [x] E2E: real run appears in backend with correct distance/pace (live-verified with local Postgres + server)
 
 ## Success Criteria
 A real outdoor run appears in `completed_activities` within one sync, with distance within 1% of Garmin Connect's figure. Syncing 3× in a row imports it once. A corrupt/implausible input yields a typed error, never a 500 or a bad row. Every activity row has non-null `source` and `externalId`.

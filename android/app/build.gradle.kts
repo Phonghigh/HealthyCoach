@@ -71,5 +71,8 @@ dependencies {
     kapt(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
 
+    implementation(libs.health.connect.client)
+    implementation(libs.androidx.datastore.preferences)
+
     debugImplementation(libs.compose.ui.tooling)
 }
