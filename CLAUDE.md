@@ -4,7 +4,7 @@ AI Marathon Coach: turns Garmin/check-in data into an actionable weekly training
 
 ## Status
 
-**Docs-only.** No source code, stack, or schema exists yet. Everything in `docs/` is proposal/direction, not implementation. Tech stack is undecided — do not assume one when discussing this project.
+**In implementation — Phase 02 scaffolding complete.** Backend (NestJS + TypeScript + PostgreSQL), Android (Kotlin + Jetpack Compose), and Prisma schema (12 tables) now exist. Tech stack is **decided** (see [MVP plan](./plans/260907-2130-mvp-implementation/plan.md)). Product direction and architecture in `docs/` remain proposal; implementation tracks the plan phases.
 
 ## Doc map
 
@@ -30,7 +30,7 @@ AI Marathon Coach: turns Garmin/check-in data into an actionable weekly training
 | Clinical | Who reviews/approves safety rules and nutrition content? |
 | Privacy | Retention, data residency, export/delete, coach sharing? |
 | Maps | POI provider and who verifies water/WC/safety data? |
-| Technical | Stack not yet chosen |
+| Technical | Stack decided: NestJS/TypeScript + Kotlin/Compose + PostgreSQL — see [Phase 02 complete](./plans/260907-2130-mvp-implementation/phase-02-project-scaffolding.md) |
 | Metrics | Success metrics/telemetry/north star not yet defined |
 
 ## Project rules

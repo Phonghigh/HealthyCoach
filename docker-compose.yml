@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-healthycoach}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-healthycoach}
+      POSTGRES_DB: ${POSTGRES_DB:-healthycoach}
+    ports:
+      - '${POSTGRES_PORT:-5432}:5432'
+    volumes:
+      - healthycoach_postgres_data:/var/lib/postgresql/data
+
+volumes:
+  healthycoach_postgres_data:

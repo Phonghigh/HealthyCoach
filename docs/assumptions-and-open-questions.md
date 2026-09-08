@@ -19,7 +19,7 @@
 | Clinical | ai duyệt safety rules/nutrition content? | risk, wording, escalation |
 | Privacy | retention, data residency, export/delete, coach sharing? | architecture/security |
 | Maps | provider/POI source và trách nhiệm xác minh nước/WC/safety? | route feature feasibility |
-| Technical | stack đề xuất có được chấp nhận không? | project bootstrap/ADRs |
+| Technical | ~~Stack đề xuất~~ **RESOLVED:** NestJS + TypeScript + PostgreSQL (backend), Kotlin + Jetpack Compose (Android). Xem [Phase 02 complete](../plans/260907-2130-mvp-implementation/plan.md) | project bootstrap/ADRs |
 | Metrics | metric thành công, telemetry và north star là gì? | prioritization/analytics |
 
 ## Rủi ro chính và giảm thiểu
